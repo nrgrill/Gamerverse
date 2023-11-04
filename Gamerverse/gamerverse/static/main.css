@@ -86,3 +86,9 @@ a.article-title:hover {
 .gamer-red {
   color: #cc0000;
 }
+
+.main-username {
+  font-size: 30px;
+  text-decoration-line: none;
+  color: #cc0000;
+}
