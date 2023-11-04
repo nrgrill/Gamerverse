@@ -5,15 +5,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #cc0000;
+  color: #527d02;
 }
 
-.bg-black {
-  background-color: #000000;
-}
-
-.bg-gray {
-  background-color: #777777;
+.bg-steel {
+  background-color: #5f788a;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -85,4 +81,13 @@ a.article-title:hover {
 
 .gamer-red {
   color: #cc0000;
+}
+
+.main-username {
+  font-size: 30px;
+  text-decoration-line: none;
+  color: #cc0000;
+}
+.gamer-green {
+  color: #527d02;
 }
