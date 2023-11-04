@@ -3,7 +3,7 @@ from flask import (render_template, url_for, flash,
 from flask_login import current_user, login_required
 from gamerverse import db
 from gamerverse.models import Post
-from gamerverse.posts.forms import PostForm
+from gamerverse.posts.forms import EventForm
 
 posts = Blueprint('posts', __name__)
 
@@ -11,7 +11,7 @@ posts = Blueprint('posts', __name__)
 @posts.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
-    form = PostForm()
+    form = EventForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
         db.session.add(post)
@@ -34,7 +34,7 @@ def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
-    form = PostForm()
+    form = EventForm()
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
