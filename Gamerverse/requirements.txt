@@ -38,6 +38,12 @@ Flask-Mail==0.9.1
 Flask-SQLAlchemy==3.0.3
 flask-talisman==1.0.0
 Flask-WTF==1.0.1
+flask_wtf
+flask_mail
+flask_login
+flask_bcrypt
+flask_sqlalchemy
+flask
 fonttools==4.39.3
 frozendict==2.3.7
 gitdb==4.0.9
