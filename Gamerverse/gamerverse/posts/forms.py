@@ -15,4 +15,4 @@ class EventForm(FlaskForm):
     nut_allergy = BooleanField('Nut Allergy?', validators=[DataRequired()])
     formality = SelectField('Formality', choices=['Casual', 'Fancy'])
 
-    submit = SubmitField('Post')
+    submit = SubmitField('Create')
