@@ -20,6 +20,11 @@ def location_to_google_maps_link(location):
 
     return google_maps_url
 
+@posts.route("/post/<int::post_id>/discord>")
+def discord_connector(id):
+    event = Event.query.get_or_404(id)
+    return event
+
 @posts.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post():
