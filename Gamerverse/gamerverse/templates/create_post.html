@@ -8,33 +8,200 @@
             <div class="form-group">
                 {{ form.title.label(class="form-control-label") }}
                 {% if form.title.errors %}
-                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    {{ form.title(class="form-control is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.title.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.title(class="form-control form-control-lg") }}
+                    {{ form.title(class="form-control") }}
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ form.content.label(class="form-control-label") }}
-                {% if form.content.errors %}
-                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                {{ form.description.label(class="form-control-label") }}
+                {% if form.description.errors %}
+                    {{ form.description(class="form-control is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in form.content.errors %}
+                        {% for error in form.description.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.content(class="form-control form-control-lg") }}
+                    {{ form.description(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.start_date.label(class="form-control-label") }}
+                {% if form.start_date.errors %}
+                    {{ form.start_date(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.start_date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.start_date(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.end_date.label(class="form-control-label") }}
+                {% if form.end_date.errors %}
+                    {{ form.end_date(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.end_date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.end_date(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.attendees.label(class="form-control-label") }}
+                {% if form.attendees.errors %}
+                    {{ form.attendees(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.attendees.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.attendees(class="form-control form-select") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.games.label(class="form-control-label") }}
+                {% if form.games.errors %}
+                    {{ form.games(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.games.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.games(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.food.label(class="form-control-label") }}
+                {% if form.food.errors %}
+                    {{ form.food(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.food.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.food(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.nut_allergy.label(class="form-control-label") }}
+                {% if form.nut_allergy.errors %}
+                    {{ form.nut_allergy(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.nut_allergy.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.nut_allergy(class="form-check") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.formality.label(class="form-control-label") }}
+                {% if form.formality.errors %}
+                    {{ form.formality(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in formality.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.formality(class="form-select") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.location.label(class="form-control-label") }}
+                {% if form.location.errors %}
+                    {{ form.location(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.location.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.location(class="form-control", type="text", id="address-input") }}
+                        <table id="suggestions"></table>
                 {% endif %}
             </div>
         </fieldset>
+        <br />
         <div class="form-group">
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
 </div>
+
+
+<script>
+    const apiKey = '6b0711decf844a418fe13d2ca601caf6'; // Replace with your Geoapify API key
+    const addressInput = document.getElementById('address-input');
+    const suggestionsList = document.getElementById('suggestions');
+
+    addressInput.addEventListener('input', debounce(handleInput, 300)); // Debounce to control API requests
+
+    function handleInput() {
+        const searchText = addressInput.value.trim();
+        if (searchText.length >= 3) {
+            const requestOptions = {
+                method: 'GET',
+            };
+
+            fetch(`https://api.geoapify.com/v1/geocode/search?text=${searchText}&apiKey=${apiKey}`, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    showSuggestions(result.features);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            clearSuggestions();
+        }
+    }
+
+    function showSuggestions(features) {
+        clearSuggestions();
+        features.forEach(feature => {
+            const suggestion = document.createElement('tr');
+            suggestion.textContent = feature.properties.formatted;
+            suggestion.addEventListener('click', () => {
+                addressInput.value = feature.properties.formatted;
+                clearSuggestions();
+            });
+            suggestionsList.appendChild(suggestion);
+        });
+    }
+
+    function clearSuggestions() {
+        while (suggestionsList.firstChild) {
+            suggestionsList.removeChild(suggestionsList.firstChild);
+        }
+    }
+
+    // Debounce function to limit API requests
+    function debounce(func, wait) {
+        let timeout;
+        return function () {
+            const context = this;
+            const args = arguments;
+            const later = function () {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+</script>
 {% endblock content %}

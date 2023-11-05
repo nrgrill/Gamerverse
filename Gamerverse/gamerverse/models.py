@@ -26,14 +26,15 @@ class Event(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     description = db.Column(db.Text, nullable=False)
-    month = db.Column(db.Integer, nullable=False)
-    day = db.Column(db.Integer, nullable=False)
-    year = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=False)
     attendees = db.Column(db.Text, nullable=False)
     games = db.Column(db.Text, nullable=False)
     food = db.Column(db.Text, nullable=False)
     nut_allergy = db.Column(db.Boolean, nullable=False)
     formality = db.Column(db.Text, nullable=False)
+    location = db.Column(db.Text, nullable=False)
+    map_link = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):

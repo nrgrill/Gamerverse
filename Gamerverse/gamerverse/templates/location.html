@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+    <h2>Address Autocomplete</h2>
+    <label for="address-input">Enter an address:</label>
+    <input type="text" id="address-input" placeholder="Start typing an address...">
+    <ul id="suggestions"></ul>
+</div>
+
+<script>
+    const apiKey = '6b0711decf844a418fe13d2ca601caf6'; // Replace with your Geoapify API key
+    const addressInput = document.getElementById('address-input');
+    const suggestionsList = document.getElementById('suggestions');
+
+    addressInput.addEventListener('input', debounce(handleInput, 300)); // Debounce to control API requests
+
+    function handleInput() {
+        const searchText = addressInput.value.trim();
+        if (searchText.length >= 3) {
+            const requestOptions = {
+                method: 'GET',
+            };
+
+            fetch(`https://api.geoapify.com/v1/geocode/search?text=${searchText}&apiKey=${apiKey}`, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    showSuggestions(result.features);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            clearSuggestions();
+        }
+    }
+
+    function showSuggestions(features) {
+        clearSuggestions();
+        features.forEach(feature => {
+            const suggestion = document.createElement('li');
+            suggestion.textContent = feature.properties.formatted;
+            suggestion.addEventListener('click', () => {
+                addressInput.value = feature.properties.formatted;
+                clearSuggestions();
+            });
+            suggestionsList.appendChild(suggestion);
+        });
+    }
+
+    function clearSuggestions() {
+        while (suggestionsList.firstChild) {
+            suggestionsList.removeChild(suggestionsList.firstChild);
+        }
+    }
+
+    // Debounce function to limit API requests
+    function debounce(func, wait) {
+        let timeout;
+        return function () {
+            const context = this;
+            const args = arguments;
+            const later = function () {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+</script>
+{% endblock %}

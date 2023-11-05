@@ -15,3 +15,12 @@ def home():
 @main.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+@main.route("/calendar")
+def calendar():
+    events = Event.query.order_by(Event.date_posted.desc())
+    return render_template('calendar.html', title='Calendar', events=events)
+
+@main.route("/location")
+def location():
+    return render_template('location.html', title='Location')

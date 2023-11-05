@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Calendar with Month Navigation</title>
+    <style>
+        .calendar {
+            font-family: Arial, sans-serif;
+        }
+        .month {
+            text-align: center;
+            font-size: 24px;
+        }
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+        }
+        .day-label {
+            font-weight: bold;
+        }
+        .day {
+            position: relative;
+            padding: 26px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .event {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #e5e5e5;
+            padding: 2px;
+        }
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar content-section">
+        <div class="row">
+            <div class="col mt-2">
+                <button id="prevMonth" class="btn btn-outline-danger"><</button>
+            </div>
+            <div class="navigation col-9">
+                <b><span class="month" id="month"></span></b>
+            </div>
+            <div class="col mt-2">
+                <button id="nextMonth" class="btn btn-outline-danger">></button>
+            </div>
+        </div>
+        <div class="days">
+            <div class="day">Sun</div>
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+        </div>
+    </div>
+    <script>
+        let currentYear = 2023;
+        let currentMonth = 10; // November
+
+        function createCalendar(year, month) {
+            const calendar = document.getElementById("month");
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            calendar.textContent = months[month] + " " + year;
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDay = new Date(year, month + 1, 0).getDate();
+
+            const days = document.querySelector(".days");
+            days.innerHTML = "";
+            for (let day = 0; day < 7; day++) {
+                const dayLabel = document.createElement("div");
+                dayLabel.textContent = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][day];
+                dayLabel.classList.add("day-label");
+                days.appendChild(dayLabel);
+            }
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement("div");
+                emptyDay.classList.add("day");
+                days.appendChild(emptyDay);
+            }
+        
+            
+            for (let day = 1; day <= lastDay; day++) {
+                const calendarDay = document.createElement("div");
+                calendarDay.textContent = day;
+                calendarDay.classList.add("day");
+                const eventText = ""
+                if (eventText) {
+                    const eventDiv = document.createElement("div");
+                    eventDiv.textContent = eventText;
+                    eventDiv.classList.add("event");
+                    calendarDay.appendChild(eventDiv);
+                }
+                days.appendChild(calendarDay);
+            }
+        
+    }
+        function updateCalendar() {
+            createCalendar(currentYear, currentMonth);
+        }
+
+        // Initial calendar
+        updateCalendar();
+
+        // Previous month button
+        document.getElementById("prevMonth").addEventListener("click", () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateCalendar();
+        });
+
+        // Next month button
+        document.getElementById("nextMonth").addEventListener("click", () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendar();
+        });      
+
+    </script>
+    
+</body>
+</html>
+
+{% endblock %}
